@@ -11,13 +11,13 @@ import (
 	"net/http"
 )
 
-type imageCaptcha struct {
+type ImageCaptcha struct {
 	Code string `json:"code"`
 	Data string `json:"data"`
 }
 
 
-func genImageCaptcha(length, width, height int) (*imageCaptcha, error) {
+func genImageCaptcha(length, width, height int) (*ImageCaptcha, error) {
 	var buf bytes.Buffer
 	digits := captcha.RandomDigits(length)
 	image := captcha.NewImage("", digits, width, height)
@@ -31,7 +31,7 @@ func genImageCaptcha(length, width, height int) (*imageCaptcha, error) {
 		s[index] = strconv.Itoa(int(v))
 	}
 	code := strings.Join(s, "")
-	return &imageCaptcha{code, data}, nil
+	return &ImageCaptcha{code, data}, nil
 }
 
 func parseInt(value string, defaultValue int) int {
