@@ -13,4 +13,8 @@ curl -XGET 'http://127.0.0.1:4600/captchas?len=6&width=120&height=40'
 
 ## run 
 
-docker run -d --restart=always -p 4600:4600 vicanso/captcha
+```bash
+docker run -d --restart=always \
+  -e ACCESS_TOKEN=xxx \
+  -p 4600:4600 vicanso/captcha
+```

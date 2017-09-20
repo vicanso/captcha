@@ -6,9 +6,10 @@ import (
 	"encoding/json"
 	"github.com/dchest/captcha"
 	"log"
+	"net/http"
+	"os"
 	"strconv"
 	"strings"
-	"net/http"
 )
 
 type ImageCaptcha struct {
@@ -16,6 +17,7 @@ type ImageCaptcha struct {
 	Data string `json:"data"`
 }
 
+var ACCESS_TOKEN = os.Getenv("ACCESS_TOKEN")
 
 func genImageCaptcha(length, width, height int) (*ImageCaptcha, error) {
 	var buf bytes.Buffer
@@ -46,6 +48,14 @@ func parseInt(value string, defaultValue int) int {
 }
 
 func imageCaptchaServe(w http.ResponseWriter, req *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Cache-Control", "no-cache")
+	if req.Header.Get("Token") != ACCESS_TOKEN {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"message": "token is invalid"}`))
+		return
+	}
+
 	query := req.URL.Query()
 	length := parseInt(query.Get("len"), 4)
 	height := parseInt(query.Get("height"), 40)
@@ -64,7 +74,6 @@ func imageCaptchaServe(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte(`{"message": "json marshal fail"}`))
 		return
 	}
-	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsons)
 }
 
