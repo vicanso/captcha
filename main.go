@@ -50,7 +50,7 @@ func parseInt(value string, defaultValue int) int {
 func imageCaptchaServe(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "no-cache")
-	if req.Header.Get("Token") != ACCESS_TOKEN {
+	if req.Header.Get("X-Token") != ACCESS_TOKEN {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(`{"message": "token is invalid"}`))
 		return
